@@ -10,12 +10,12 @@ pipeline {
         APPLICATION_NAME = "eureka"
      }
      stages {
-    //     stage ('Build Stage') {
-    //         steps {
-    //             sh 'mvn clean package -DskipTest=true'
-    //             archiveArtifacts 'target/*.jar'
-    //         }
-    //     }
+        stage ('Build Stage') {
+            steps {
+                sh 'mvn clean package -DskipTest=true'
+                archiveArtifacts 'target/*.jar'
+            }
+        }
 
         stage ('sonarqube'){
            steps {
