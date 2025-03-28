@@ -24,12 +24,12 @@ pipeline {
                    sh """
                       mvn sonar:sonar \
                         -Dsonar.projectKey=i27-eureka \
-                        -Dsonar.host.url=http://34.86.131.81:9000 \
+                        -Dsonar.host.url=http://34.21.36.167:9000 \
                         -Dsonar.login=sqa_7c6ad449db3d7d80022780dcc34d31da846ee528
                       """
                  }
                    timeout (time: 2, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
+                   waitForQualityGate abortPipeline: true
                }
              
            }
