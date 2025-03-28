@@ -6,33 +6,35 @@ pipeline {
         maven 'Maven-3.8.8'
         jdk 'JDK-17'
     }
-     environment {
+    environment {
         APPLICATION_NAME = "eureka"
-     }
-     stages {
+    }
+    stages {
         stage ('Build Stage') {
             steps {
-                sh 'mvn clean package -DskipTest=true'
+                echo "Checking Maven installation..."
+                sh 'which mvn'  // Check where mvn is located
+                sh 'mvn -v'      // Print Maven version
+                sh 'mvn clean package -DskipTests=true'
                 archiveArtifacts 'target/*.jar'
             }
         }
 
-        stage ('sonarqube'){
-           steps {
-               echo "*******Starting Sonar Scans with Quality Gates*********"
-               withSonarQubeEnv('sonarqube') {// SonarQube is the name we configured in Manage Jenkins > system > Sonarqube , it hsould match exactly
-                   sh """
-                      mvn sonar:sonar \
-                        -Dsonar.projectKey=i27-eureka \
-                        -Dsonar.host.url=http://34.86.131.81:9000 \
-                        -Dsonar.login=sqa_7c6ad449db3d7d80022780dcc34d31da846ee528
-                      """
-                 }
-                   timeout (time: 2, unit: 'MINUTES') {
+        stage ('SonarQube Scan') {
+            steps {
+                echo "******* Starting SonarQube Scans with Quality Gates *********"
+                withSonarQubeEnv('sonarqube') { 
+                    sh """
+                    mvn sonar:sonar \
+                      -Dsonar.projectKey=i27-eureka \
+                      -Dsonar.host.url=http://34.86.131.81:9000 \
+                      -Dsonar.login=sqa_7c6ad449db3d7d80022780dcc34d31da846ee528
+                    """
+                }
+                timeout(time: 5, unit: 'MINUTES') { // Increased timeout for SonarQube scan
                     waitForQualityGate abortPipeline: true
-               }
-             
-           }
+                }
+            }
         }
-     }
+    }
 }
