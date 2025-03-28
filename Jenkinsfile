@@ -9,7 +9,7 @@ pipeline {
      environment {
         APPLICATION_NAME = "eureka"
      }
-    //  stages {
+     stages {
     //     stage ('Build Stage') {
     //         steps {
     //             sh 'mvn clean package -DskipTest=true'
